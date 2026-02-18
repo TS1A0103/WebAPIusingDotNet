@@ -1,5 +1,6 @@
 ﻿using College.Model;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace College.Controllers
@@ -144,6 +145,43 @@ namespace College.Controllers
             existingStudent.Email = model.Email;
             existingStudent.Address = model.Address;
             existingStudent.Age = model.Age;
+
+            return NoContent();
+
+        }
+        //HttpPatch request to update the record partially
+        [HttpPatch]
+        [Route("{id:int}UpdatePartial")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public ActionResult UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
+        {
+            if (patchDocument == null || id <= 0)
+                return BadRequest();
+
+            var existingStudent = CollegeRepository.Students.Where(s => s.Id == id).FirstOrDefault();
+
+            if (existingStudent == null)
+                return NotFound();
+
+            var StudentDTO = new StudentDTO
+            {
+                Id = existingStudent.Id,
+                StudentName = existingStudent.StudentName,
+                Email = existingStudent.Email,
+                Address = existingStudent.Address,
+            };
+            patchDocument.ApplyTo(StudentDTO, ModelState);
+            if(!ModelState.IsValid)
+                return BadRequest();
+
+            existingStudent.StudentName = StudentDTO.StudentName;
+            existingStudent.Email = StudentDTO.Email;
+            existingStudent.Address = StudentDTO.Address;
+            existingStudent.Age = StudentDTO.Age;
 
             return NoContent();
 
