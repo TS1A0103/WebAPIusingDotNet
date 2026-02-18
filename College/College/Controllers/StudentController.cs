@@ -91,6 +91,29 @@ namespace College.Controllers
             };
             return Ok(StudentDTO);
         }
+        [HttpPost]
+        [Route("Create")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model)
+        {
+            if (model == null)
+            { return BadRequest(); }
+            int newId = CollegeRepository.Students.LastOrDefault().Id + 1;
+            Student student = new Student
+            {
+                Id = newId,
+                StudentName = model.StudentName,
+                Address = model.Address,
+                Email = model.Email
+            };
+            CollegeRepository.Students.Add(student);
+            model.Id = student.Id;
+
+            return Ok(model);
+        }
 
         // DELETE: api/Student/1
         [HttpDelete("{id:int}")]
