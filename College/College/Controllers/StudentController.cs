@@ -21,6 +21,10 @@ namespace College.Controllers
 
         // GET: api/Student/1  (ONLY matches ints)
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<Student> GetStudentById(int id)
         {
             //BadRequest - 400 - Badrequest - client error
