@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using College.Validators;
+using System.ComponentModel.DataAnnotations;
 
 namespace College.Model
 {
@@ -8,6 +9,7 @@ namespace College.Model
         [Required(ErrorMessage = "entered name is not valid")]
         [StringLength(30)]
         public string StudentName { get; set; }
+
         [Range(10, 20)]
         public int Age { get; set; }
         [EmailAddress]
@@ -20,5 +22,7 @@ namespace College.Model
         [Required]
         [Compare (nameof(Password))]
         public string ConfirmPassword { get; set; }
+        [DateCheck]
+        public DateTime AdnissionDate { get; set; }
     }
 }

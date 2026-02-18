@@ -101,6 +101,13 @@ namespace College.Controllers
         {
             if (model == null)
             { return BadRequest(); }
+            //if (model.AdnissionDate < DateTime.Now)
+            //{
+            //    //1. Directly adding error message to modelstate
+            //    //2Using Custom attribute
+            //    ModelState.AddModelError("Admission date error", "Admission date must be greated than on equal to todays date");
+            //    return BadRequest(ModelState);
+            //}
             int newId = CollegeRepository.Students.LastOrDefault().Id + 1;
             Student student = new Student
             {
@@ -114,6 +121,32 @@ namespace College.Controllers
             //Status 201 - to created url along with returning new student details
             return CreatedAtRoute("GetStudentById", new { id = model.Id }, model);
             //return Ok(model);
+        }
+
+        //HttpPut request to update the record
+        [HttpPut]
+        [Route("Update")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public ActionResult UpdateStudent([FromBody] Student model)
+        {
+            if(model==null || model.Id <=0)
+                return BadRequest();
+
+            var existingStudent = CollegeRepository.Students.Where(s => s.Id == model.Id).FirstOrDefault();
+
+            if(existingStudent ==null)
+                return NotFound();
+            existingStudent.StudentName = model.StudentName;
+            existingStudent.Email = model.Email;
+            existingStudent.Address = model.Address;
+            existingStudent.Age = model.Age;
+
+            return NoContent();
+
         }
 
         // DELETE: api/Student/1
