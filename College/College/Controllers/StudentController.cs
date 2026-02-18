@@ -13,22 +13,31 @@ namespace College.Controllers
         [HttpGet]
         [Route("All", Name = "GetAllStudents")]
 
-        public IEnumerable<Student> GetStudents()
+        public ActionResult<IEnumerable<Student>> GetStudents()
         {
-            return CollegeRepository.Students;
+            //Ok-200 -success
+            return Ok(CollegeRepository.Students);
         }
 
         // GET: api/Student/1  (ONLY matches ints)
         [HttpGet("{id:int}")]
-        public Student GetStudentById(int id)
+        public ActionResult<Student> GetStudentById(int id)
         {
-            return CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault();
+            //BadRequest - 400 - Badrequest - client error
+            if (id <= 0)
+                return BadRequest();
+            var student=(CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault());
+            //NotFound - 404 - NotFound -client error
+            if (student == null) return NotFound($"Student with '{id}' not found");
+            //Ok - 200 -Success
+            return Ok(student);
         }
 
         // GET: api/Student/byname/john
         [HttpGet("byname/{name}")]
         public ActionResult<Student> GetStudentByName(string name)
         {
+            
             var student = CollegeRepository.Students.FirstOrDefault(s => s.StudentName == name);
             if (student == null) return NotFound($"Student with name '{name}' not found");
             return Ok(student);
