@@ -11,12 +11,38 @@ namespace College.Controllers
 
         //endpoint for getting all details
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Route("All", Name = "GetAllStudents")]
 
-        public ActionResult<IEnumerable<Student>> GetStudents()
+        public ActionResult<IEnumerable<StudentDTO>> GetStudents()
         {
+            //var students = new List<StudentDTO>();
+            //foreach (var item in CollegeRepository.Students)
+            //{
+            //    StudentDTO obj = new StudentDTO()
+            //    {
+            //        Id = item.Id,
+            //        StudentName = item.StudentName,
+            //        Address = item.Address,
+            //        Email = item.Email
+            //    };
+            //    students.Add(obj);
+            //}
+
+            var students = CollegeRepository.Students.Select(s => new StudentDTO()
+            {
+                Id = s.Id,
+                StudentName = s.StudentName,
+                Address = s.Address,
+                Email = s.Email,
+
+            });
+               
             //Ok-200 -success
-            return Ok(CollegeRepository.Students);
+            return Ok(students);
         }
 
         // GET: api/Student/1  (ONLY matches ints)
@@ -25,30 +51,53 @@ namespace College.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Student> GetStudentById(int id)
+        public ActionResult<StudentDTO> GetStudentById(int id)
         {
             //BadRequest - 400 - Badrequest - client error
             if (id <= 0)
                 return BadRequest();
             var student=(CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault());
             //NotFound - 404 - NotFound -client error
-            if (student == null) return NotFound($"Student with '{id}' not found");
+            if (student == null) 
+                return NotFound($"Student with '{id}' not found");
+            var StudentDTO = new StudentDTO()
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Email = student.Email,
+                Address = student.Address,
+            };
             //Ok - 200 -Success
-            return Ok(student);
+            return Ok(StudentDTO);
         }
 
         // GET: api/Student/byname/john
         [HttpGet("byname/{name}")]
-        public ActionResult<Student> GetStudentByName(string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<StudentDTO> GetStudentByName(string name)
         {
             
             var student = CollegeRepository.Students.FirstOrDefault(s => s.StudentName == name);
             if (student == null) return NotFound($"Student with name '{name}' not found");
-            return Ok(student);
+            var StudentDTO = new StudentDTO()
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Email = student.Email,
+                Address = student.Address,
+            };
+            return Ok(StudentDTO);
         }
 
         // DELETE: api/Student/1
         [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult DeleteStudent(int id)
         {
             var student = CollegeRepository.Students.FirstOrDefault(s => s.Id == id);
