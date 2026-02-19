@@ -14,6 +14,5 @@ namespace College.Validators
             }
             return ValidationResult.Success;
         }
-
     }
 }
