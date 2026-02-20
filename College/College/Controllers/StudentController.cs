@@ -9,7 +9,11 @@ namespace College.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-
+        private readonly ILogger<StudentController> _logger;
+        public StudentController(ILogger<StudentController> logger)
+        {
+            _logger = logger;
+        }
         //endpoint for getting all details
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -19,6 +23,7 @@ namespace College.Controllers
         [Route("All", Name = "GetAllStudents")]
 
         public ActionResult<IEnumerable<StudentDTO>> GetStudents()
+
         {
             //var students = new List<StudentDTO>();
             //foreach (var item in CollegeRepository.Students)
@@ -32,7 +37,7 @@ namespace College.Controllers
             //    };
             //    students.Add(obj);
             //}
-
+            _logger.LogInformation("GetStudents method got started executing");
             var students = CollegeRepository.Students.Select(s => new StudentDTO()
             {
                 Id = s.Id,
@@ -55,12 +60,19 @@ namespace College.Controllers
         public ActionResult<StudentDTO> GetStudentById(int id)
         {
             //BadRequest - 400 - Badrequest - client error
-            if (id <= 0)
+            if (id <= 0) 
+            {
+                _logger.LogWarning("BadRequest");
                 return BadRequest();
+            }
+                
             var student=(CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault());
             //NotFound - 404 - NotFound -client error
-            if (student == null) 
+            if (student == null)
+            {
+                _logger.LogError("Student not found with Id");
                 return NotFound($"Student with '{id}' not found");
+            }
             var StudentDTO = new StudentDTO()
             {
                 Id = student.Id,

@@ -9,17 +9,22 @@ namespace College.Controllers
     public class DemoController : ControllerBase
     {
         //2.Loosely coupled technique
-        private readonly IMyLogger _myLogger;
+        private readonly ILogger<DemoController> _logger;
 
-        public DemoController(IMyLogger myLogger)
+        public DemoController(ILogger<DemoController> logger)
         {
-            _myLogger = myLogger;
+            _logger = logger;
 
         }
         [HttpGet]
         public ActionResult Index()
         {
-            _myLogger.Log("Index method started");
+            _logger.LogTrace("LogMessage from trace");
+            _logger.LogDebug("LogMessage from Debug");
+            _logger.LogInformation("LogMessage from Information");
+            _logger.LogWarning("LogMessage from LogWarning");
+            _logger.LogError("LogMessage from LogError");
+            _logger.LogCritical("LogMessage from LogCritical");
             return Ok();
         }
     }
