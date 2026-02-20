@@ -4,14 +4,20 @@ using Serilog;
 using System.Buffers;
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = new LoggerConfiguration().MinimumLevel.Information()
-    .WriteTo.File("Log/log.txt", rollingInterval: RollingInterval.Minute)
-    .CreateLogger();
+builder.Logging.ClearProviders();
+
+builder.Logging.AddLog4Net();
+
+#region Serilog settings
+//Log.Logger = new LoggerConfiguration().MinimumLevel.Information()
+//    .WriteTo.File("Log/log.txt", rollingInterval: RollingInterval.Minute)
+//    .CreateLogger();
 //Use this in only for serilog that is to override the built-in loggers
-builder.Host.UseSerilog();
+//builder.Host.UseSerilog();
 
 //Use this for serilog along with built in loggers
-builder.Logging.AddSerilog();
+//builder.Logging.AddSerilog();
+#endregion
 
 // Add services to the container.
 
