@@ -1,5 +1,7 @@
+using College.Data;
 using College.MyLogging;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Buffers;
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,11 @@ builder.Logging.AddLog4Net();
 //Use this for serilog along with built in loggers
 //builder.Logging.AddSerilog();
 #endregion
+
+builder.Services.AddDbContext<CollegeDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CollegeAppDBConnection"));
+    });
 
 // Add services to the container.
 
