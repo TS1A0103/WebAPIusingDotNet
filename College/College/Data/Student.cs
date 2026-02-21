@@ -5,13 +5,16 @@ namespace College.Data
 {
     public class Student
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
+        
         public int Id { get; set; }
+        [Required]
+        [StringLength(250)]
         public string StudentName { get; set; }
-
+        [Required]
+        [MaxLength(250)]
         public string Email { get; set; }
-
+        [MaxLength(500)]
         public string Address { get; set; }
         public DateTime DOB { get; set; }
     }
