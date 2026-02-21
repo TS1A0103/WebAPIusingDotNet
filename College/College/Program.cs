@@ -1,3 +1,4 @@
+using College.Configurations;
 using College.Data;
 using College.MyLogging;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
@@ -36,6 +37,8 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
 builder.Services.AddScoped<IMyLogger, LogToFile>();
 
