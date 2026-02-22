@@ -15,10 +15,9 @@ namespace College.Controllers
         private readonly ILogger<StudentController> _logger;
         private readonly CollegeDBContext _dbContext;
         private readonly IMapper _mapper;
-        public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper)
+        public StudentController(ILogger<StudentController> logger, IMapper mapper)
         {
             _logger = logger;
-            _dbContext = dbContext;
             _mapper = mapper;
         }
         //endpoint for getting all details
