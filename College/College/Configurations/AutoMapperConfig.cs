@@ -14,6 +14,14 @@ namespace College.Configurations
 
             //To Map the classes as above in sinle line
             CreateMap<StudentDTO, Student>().ReverseMap();
+            //Config for differently named property
+            //CreateMap<StudentDTO, Student>().ReverseMap().ForMember(n =>n.Name, opt => opt.MapFrom(x =>x.StudentName)).;
+
+            //Config for Ignoring property
+            //CreateMap<StudentDTO, Student>().ReverseMap().ForMember(n => n.StudentName, opt => opt.Ignore());
+
+            //Config for making meaningful otput on null values
+            //CreateMap<StudentDTO, Student>().ReverseMap().AddTransform<string>(n => string.IsNullOrEmpty(n) ? "No Address Found" : n);
         }
     }
 }
