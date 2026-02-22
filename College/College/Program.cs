@@ -1,5 +1,6 @@
 using College.Configurations;
 using College.Data;
+using College.Data.Repository;
 using College.MyLogging;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
 builder.Services.AddScoped<IMyLogger, LogToFile>();
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 
 var app = builder.Build();
 

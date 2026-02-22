@@ -16,13 +16,11 @@ namespace College.Data.Repository
             return student.Id;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Student student)
         {
-            var studentToDelete =await _dbContext.Students.Where(student => student.Id == id).FirstOrDefaultAsync();
-            if (studentToDelete == null)
-                throw new ArgumentException($"No Student Found with {id}");
+            
 
-            _dbContext.Students.Remove(studentToDelete);
+            _dbContext.Students.Remove(student);
             await _dbContext.SaveChangesAsync();
 
             return true;
@@ -33,9 +31,13 @@ namespace College.Data.Repository
             return await _dbContext.Students.ToListAsync();
         }
 
-        public async Task<Student> GetByIdAsync(int id)
+        public async Task<Student> GetByIdAsync(int id, bool useNoTracking = false)
         {
+            if(useNoTracking)
+            return await _dbContext.Students.AsNoTracking().Where(student => student.Id == id).FirstOrDefaultAsync();
+            else
             return await _dbContext.Students.Where(student => student.Id == id).FirstOrDefaultAsync();
+            
         }
 
         public async Task<Student> GetByNameAsync(string name)
@@ -45,16 +47,7 @@ namespace College.Data.Repository
 
         public async Task<int> UpdateAsync(Student student)
         {
-            var studentToUpdate = await _dbContext.Students
-                .FirstOrDefaultAsync(s => s.Id == student.Id);
-
-            if (studentToUpdate == null)
-                throw new ArgumentException($"No Student Found with {student.Id}");
-
-            studentToUpdate.StudentName = student.StudentName;
-            studentToUpdate.Email = student.Email;
-            studentToUpdate.Address = student.Address;
-            studentToUpdate.DOB = student.DOB;
+            _dbContext.Update(student);
 
             await _dbContext.SaveChangesAsync();
             return student.Id;
